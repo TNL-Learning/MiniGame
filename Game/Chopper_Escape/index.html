@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+</head>
+
+<body position="relative">
+    <img src="image\ground.jpg" id="ground" style="position: absolute;">
+    <img src="image\Chopper.jpg" id="chopper" width="5%" style="position: absolute;">
+
+    <img src="image\Akainu.png" id="image_0" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_1" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_2" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_3" width="10%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_4" width="10%" style="position: absolute;">
+    <img src="image\Akainu.png" id="image_5" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_6" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_7" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_8" width="10%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_9" width="10%" style="position: absolute;">
+    <img src="image\Akainu.png" id="image_10" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_11" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_12" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_13" width="01%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_14" width="10%" style="position: absolute;">
+    <img src="image\Akainu.png" id="image_15" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_16" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_17" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_18" width="10%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_19" width="10%" style="position: absolute;">
+    <img src="image\Akainu.png" id="image_20" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_21" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_22" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_23" width="10%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_24" width="10%" style="position: absolute;">
+    <img src="image\Akainu.png" id="image_25" width="10%" style="position: absolute;">
+    <img src="image\Zephyr.png" id="image_26" width="10%" style="position: absolute;">
+    <img src="image\Fujitora.png" id="image_27" width="10%" style="position: absolute;">
+    <img src="image\Borsalino.png" id="image_28" width="10%" style="position: absolute;">
+    <img src="image\Kuzan.png" id="image_29" width="10%" style="position: absolute;">
+    
+
+
+    <script >
+        
+        let groundLevel = 105;
+        let admiralMarine =["image\Akainu.png","image/Zephyr.png","image/Fujitora.png","image/Borsalino.png","image/Kuzan.png"];
+        let AM_id= [false, false,false,false,false,false, false,false,false,false,false, false,false,false,false,false, false,false,false,false,false, false,false,false,false,false, false,false,false,false];
+        let bJumping =  false;
+        let m_Direction = "up";
+        let heightJump = 100;
+        initialize();
+
+        setInterval(chopperJump, 20);
+        
+        setInterval(enableAdmiralMarine, 5000);
+
+        setInterval(admiralMarineMove, 25);
+
+        //setInterval(moveAll, 200);
+        
+        function initialize(){
+            let Height = parseInt(window.innerHeight);
+            let Width = parseInt(window.innerWidth);
+            document.getElementById("ground").style.bottom = 0+"px";
+            let chopperPosition = document.getElementById("chopper").style;
+            chopperPosition.bottom = groundLevel+"px";
+            chopperPosition.left = parseInt(0.6*Width)+"px";
+            for (let i = 0; i < AM_id.length; i++)
+            {
+                let image = document.getElementById("image_"+i);
+                if (!image) continue;
+                image.style.left = 100+"px";
+                image.style.bottom = groundLevel+"px";
+                //image.hidden = true;
+                image.style.visibility = 'hidden';
+            }
+        }
+
+        function admiralMarineMove(){
+            for (let i = 0; i< AM_id.length; i++){
+                if (!AM_id[i]) continue;
+                onMoveRight(i);
+            }
+        }
+
+
+        function moveAll(){
+            console.log("Function Move All is called.");
+            for (let i = 0; i< AM_id.length; i++)
+            {
+                if (!AM_id[i])
+                {
+                    if (i < 2){
+                        continue;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                moveOjb(i);
+            }
+        }
+        function moveOjb(id){
+            let image = document.getElementById("image_"+id);
+            image.style.left = parseInt(image.style.left)+ 20+"px";
+            if (image.style.left > window.innerWidth)
+            {
+                AM_id[id] = false;
+                image.delete();
+            }
+        }
+
+        function enableAdmiralMarine(){
+            console.log("Function Enable Admiral Marine is called.");
+            let index = parseInt(30*Math.random());
+            let image_id ="image_" + index;
+            console.log("Enable image: " + image_id);
+            if (AM_id[index]){
+                console.log("Already Enable.");
+            }
+            else{
+                enableImage(image_id);
+                AM_id[index] = true;
+            }
+
+        }
+        function enableImage(id){
+            let image =  document.getElementById(id);
+            image.style.visibility = 'visible';
+        }
+
+        function createAdmiralMarine(){
+            console.log("Function Create Admiral Marine is called.");
+            let index = 0;
+            //let index = parseInt(10*Math.random());
+            let image_id ="image_";
+            for (let i = 0; i< AM_id.length; i++)
+            {
+                if (!AM_id[i]){
+                    image_id = image_id+i;
+                    AM_id[i] = true;
+                    break;
+                }
+            }
+            let addedImage = document.createElement("img");
+            let path = admiralMarine[index];
+            console.log(path);
+            addedImage.setAttribute("src", "Akainu.png");
+            //addedImage.setAttribute("style", "position : absolute;");
+            //addedImage.setAttribute("id",image_id);
+        }
+
+        function chopperJump(){
+            if (!bJumping) return;
+            console.log("Chopper is jumping.");
+            if (m_Direction == "up"){
+                onMoveUp("chopper", 850);
+            }
+            else{
+                onMoveDown("chopper");
+            }
+        }
+        function onMoveUp(id, upperLimite){
+            //document.getElementById(id).style.bottom = parseInt(document.getElementById(id).style.bottom) + 20 + "px";
+            let Obj =  document.getElementById(id);
+            let intBot = parseInt(Obj.style.bottom) + 20 ;
+            Obj.style.bottom = intBot+ "px";
+            if (intBot >= upperLimite){
+                m_Direction = "down";
+            }
+        }
+        function onMoveDown(id){
+            //document.getElementById(id).style.bottom = parseInt(document.getElementById(id).style.bottom) - 20 + "px";
+            let Obj =  document.getElementById(id);
+            let intBot = parseInt(Obj.style.bottom) - 20 ;
+            Obj.style.bottom = intBot+ "px";
+            if (intBot <= groundLevel){
+                m_Direction = "up";
+                bJumping = false;
+                Obj.style.bottom = groundLevel+"px";
+            }
+        }
+        function onMoveRight(id){
+            //document.getElementById(id).style.left = parseInt(document.getElementById(id).style.left) + 50 + "px";
+            let Obj =  document.getElementById("image_"+id);
+            let intLeft = parseInt(Obj.style.left) + 20 ;
+            Obj.style.left = intLeft+ "px";
+            if (intLeft >= window.innerWidth){
+                console.log("reset image "+ id)
+                Obj.style.left = -500+"px";
+                AM_id[id] = false;
+                Obj.style.visibility = 'hidden';
+            }
+        }
+
+
+        function keyboardEven(event){
+            if (event.key == " " && !bJumping){
+                bJumping = true;
+            }
+        }
+        window.addEventListener("keydown", keyboardEven);
+    </script>
+
+</body>
+</html>
