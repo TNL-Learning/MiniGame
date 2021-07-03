@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Crosses</title>
+</head>
+<style>
+  table {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  td {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+  }
+</style>
+
+<body>
+
+  <table width="100%" height="100%">
+    <tr>
+      <td id="left" style="background-color: cadetblue; text-align:center;">
+        <h1 style='font-size:100px; color:red'>Game Crosses</h1>
+        <h2>By TNL</h2>
+
+
+        <button type="button" onclick="Play()" style="color: red; background-color:greenyellow; font-size: 30px">
+          <strong>PLAY
+            GAME</strong></button>
+
+        <p style="font-size: 20px">Number of user: <span onclick='decreaseNumberUser()'>&#9664;</span> <span
+            id='numUsers'>2</span> <span onclick='increaseNumberUser()'>&#9654;</span></p>
+
+
+        <br>
+        <table id="UserData" border="1" style="font-size:20px; width: 300px">
+          <tr>
+            <td id='userName_0' style='text-align: left; width: 60%' onclick='editContent(this)'>User 1</td>
+            <td id='userSign_0' style='text-align: center; width: 10%' onclick='editContent(this)'>x</td>
+            <td id='userColor_0' style='text-align: center;width: 30%' onclick='editContent(this)'>red</td>
+          </tr>
+          <tr>
+            <td id='userName_1' style='text-align: left; width: 60%' onclick='editContent(this)'>User 2</td>
+            <td id='userSign_1' style='text-align: center; width: 10%' onclick='editContent(this)'>o</td>
+            <td id='userColor_1' style='text-align: center;width: 30%' onclick='editContent(this)'>blue</td>
+          </tr>
+        </table>
+
+
+      </td>
+      <td id="right" style="background-color: papayawhip;">
+        <table border="1" cellspacing="0" id="space">
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    initialize();
+    function initialize() {
+      startInterface();
+    }
+
+    function editContent(item) {
+      let txt = prompt("Change to:");
+      item.innerText = txt;
+      for (let i = 0; i < userName.length; i++) {
+        if (item.id == "userName_" + i) {
+          userName[i] = txt;
+          return;
+        }
+      }
+      for (let i = 0; i < userSign.length; i++) {
+        if (item.id == "userSign_" + i) {
+          userSign[i] = txt;
+          return;
+        }
+      }
+      for (let i = 0; i < userColor.length; i++) {
+        if (item.id == "userColor_" + i) {
+          userColor[i] = txt;
+          return;
+        }
+      }
+    }
+
+
+
+
+    let userName = ["User 1", "User 2"];
+    let userSign = ["x", "o"];
+    let userColor = ["red", "blue"];
+    let timeLimit = 10;
+    let countdown = timeLimit;
+    let turn = 0;
+    let boardSize = 30;
+    let isPlaying = false;
+
+    window.setInterval(onCountdown, 1000);
+
+
+    function startInterface() {
+      let left = document.getElementById("left");
+      left.style.height = window.innerHeight + "px";
+      left.style.width = "100%";
+    }
+    function playingInterface() {
+      let left = document.getElementById("left");
+      left.style.height = window.innerHeight + "px";
+      left.style.width = "20%";
+
+      let txt = "";
+      txt += "<p style='text-align:center'>";
+      txt += "<span style='font-size: 35px;'>Time:</span>";
+      txt += "<span style='font-size: 35px' id='time'>" + timeLimit + "</span>";
+      txt += "</p>";
+      txt += "<table style='width:60%'>"
+      for (let i = 0; i < userName.length; i++) {
+        txt += "<tr>";
+        txt += "<td style='color:red; visibility: hidden' id = 'userTurn_"+i+"'> &#9654</td>";
+        txt += "<td style='text-align: left; width: 90%'> " + userName[i] + "</td>";
+        txt += "</tr>";
+      }
+      txt += "</table>"
+      left.innerHTML = txt;
+      document.getElementById("userTurn_0").style.visibility = "visible";
+      countdown = timeLimit;
+    }
+
+    function resetTime() {
+      countdown = timeLimit;
+      document.getElementById("time").innerText = countdown;
+    }
+    function nextTurn() {
+      document.getElementById("userTurn_" + turn).style.visibility = "hidden";
+      turn = turn == userSign.length - 1 ? 0 : turn + 1;
+      document.getElementById("userTurn_" + turn).style.visibility = "visible";
+      resetTime();
+    }
+    function onCountdown() {
+      if (isPlaying) {
+        countdown--;
+        if (countdown < 0) {
+          nextTurn();
+        }
+        else
+          document.getElementById("time").innerText = countdown;
+      }
+    }
+
+    function decreaseNumberUser() {
+      let number = parseInt(document.getElementById("numUsers").innerText);
+      number--;
+      if (number < 2) {
+        return;
+      }
+      document.getElementById("numUsers").innerText = number;
+      document.getElementById("UserData").deleteRow(number);
+      userName.pop();
+      userSign.pop();
+      userColor.pop();
+
+    }
+
+    function increaseNumberUser() {
+      let number = parseInt(document.getElementById("numUsers").innerText);
+      number++;
+      if (number > 4) {
+        return;
+      }
+      document.getElementById("numUsers").innerText = number;
+      let table = document.getElementById("UserData");
+      let newRow = document.createElement("tr");
+      table.appendChild(newRow);
+      let index = number - 1;
+      let txt = "";
+      txt += " <td id='userName_" + index + "' style='text-align: left; width: 60%' onclick='editContent(this)'>User " + number + "</td>";
+      txt += " <td id='userSign_" + index + "' style='text-align: center; width: 10%' onclick='editContent(this)'>i</td>";
+      txt += " <td id='userColor_" + index + "' style='text-align: center;width: 30%' onclick='editContent(this)'>green</td>";
+      newRow.innerHTML = txt;
+
+      userName.push("User " + number);
+      userSign.push("i");
+      userColor.push("green");
+
+    }
+
+    function createBoard(sizeBoard) {
+      let txt = "";
+      for (let i = 0; i < sizeBoard; i++) {
+        txt += "<tr>";
+        for (let j = 0; j < sizeBoard; j++) {
+          txt += "<td  id='cell-" + i + "-" + j + "'onclick='onClickCell(this, " + i + "," + j + ")'></td>";
+        }
+        txt += "</tr>";
+      }
+      document.getElementById("space").innerHTML = txt;
+    }
+
+    function Play() {
+      playingInterface();
+      createBoard(boardSize);
+      isPlaying = true;
+    }
+
+    function onClickCell(cell, row, col) {
+      if (cell.innerText == "") {
+        cell.innerHTML = "<strong>" + userSign[turn] + "</strong>";
+        cell.style.color = userColor[turn];
+        if (isWin(row, col)) {
+          window.setTimeout(alert(userName[turn] + " Win"), 5000);
+          isPlaying = false;
+        }
+        else {
+          nextTurn();
+        }
+      }
+    }
+
+
+    function isWin(row, col) {
+      if (checkHorizontal(row, col)) {
+        return true;
+      }
+      if (checkVertical(row, col)) {
+        return true;
+      }
+      if (checkCrossRight(row, col)) {
+        return true;
+      }
+      return checkCrossLeft(row, col);
+    }
+    function checkHorizontal(row, col) {
+      console.log("check H: row = " + row + " col =" + col);
+      let count = 1;
+      let iRow = 0;
+      let iCol = 0;
+      let check = userSign[turn];
+      let value = "";
+      for (let i = 1; i < 5; i++) {
+        iRow = row;
+        iCol = col - i;
+        if (iCol < 0) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      for (let i = 1; i < 5; i++) {
+        iRow = row;
+        iCol = col + i;
+        if (iCol == boardSize) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      return count >= 5;
+    }
+
+    function checkVertical(row, col) {
+      console.log("check H: row = " + row + " col =" + col);
+      let count = 1;
+      let iRow = 0;
+      let iCol = 0;
+      let check = userSign[turn];
+      let value = "";
+      for (let i = 1; i < 5; i++) {
+        iRow = row - i;
+        iCol = col;
+        if (iRow < 0) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      for (let i = 1; i < 5; i++) {
+        iRow = row + i;
+        iCol = col;
+        if (iRow == boardSize) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      return count >= 5;
+    }
+
+    function checkCrossRight(row, col) {
+      console.log("check H: row = " + row + " col =" + col);
+      let count = 1;
+      let iRow = 0;
+      let iCol = 0;
+      let check = userSign[turn];
+      let value = "";
+      for (let i = 1; i < 5; i++) {
+        iRow = row - i;
+        iCol = col - i;
+        if (iRow < 0 || iCol < 0) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      for (let i = 1; i < 5; i++) {
+        iRow = row + i;
+        iCol = col + i;
+        if (iRow == boardSize || iCol == boardSize) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      return count >= 5;
+    }
+
+    function checkCrossLeft(row, col) {
+      console.log("check H: row = " + row + " col =" + col);
+      let count = 1;
+      let iRow = 0;
+      let iCol = 0;
+      let check = userSign[turn];
+      let value = "";
+      for (let i = 1; i < 5; i++) {
+        iRow = row - i;
+        iCol = col + i;
+        if (iRow < 0 || iCol == boardSize) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      for (let i = 1; i < 5; i++) {
+        iRow = row + i;
+        iCol = col - i;
+        if (iRow == boardSize || iCol < 0) {
+          break;
+        }
+        value = getValueAtCell(iRow, iCol);
+        if (value == check) {
+          count++;
+        }
+        else {
+          break;
+        }
+      }
+      console.log("count = " + count);
+      return count >= 5;
+    }
+
+    function getValueAtCell(row, col) {
+      let id = "cell-" + row + "-" + col;
+      return document.getElementById(id).innerText;
+    }
+
+
+  </script>
+
+
+
+</body>
+
+</html>
